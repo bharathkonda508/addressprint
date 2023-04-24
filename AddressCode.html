@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Address Format</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    </head>
+    <body>
+        <style type="text/css" media="print">
+            .no-print { display: none; }
+         </style>
+        <style>
+            #address-container{
+                display: flex;
+                flex-wrap: wrap;
+                padding: 5px;
+            }
+            div.address-list{
+                flex: 0 30%;
+                border: solid 1px #333;
+                padding: 5px;
+            }
+            #address-text{
+                width: 95%;
+                height: 300px;
+            }
+        </style>
+       <!--  <input type="file" name="file" id="file"> -->
+        <button onclick="converFormat()" class="no-print">Format</button>
+        <button onclick="printFormat()" class="no-print">Print</button>
+        <button onclick="clearFormat()" class="no-print">Clear</button>
+        <br>
+        <div id="text-container">
+            <p><label for="address-text">Add Address:</label></p>
+            <textarea id="address-text" value="" class="no-print"></textarea>
+        </div>        
+        <br>        
+        <div id="address-container"></div>
+        <script type="text/javascript">
+            function clearFormat(){
+                document.getElementById('address-text').value = "";
+                const addressList = document.getElementById('address-container')
+                while (addressList.hasChildNodes()) {
+                    addressList.removeChild(addressList.firstChild);
+                }
+            }
+            function printFormat(){
+                window.print()
+            }
+            function converFormat(){
+            //clearFormat();
+            const $output = document.getElementById('address-container')
+            while ($output.hasChildNodes()) {
+                $output.removeChild($output.firstChild);
+            }
+            const addressText = document.getElementById('address-text')
+           // document.getElementById('file').onchange = function() {
+           // var file = this.files[0];
+
+            //var reader = new FileReader();
+           // reader.onload = function(progressEvent) {
+                // Entire file
+                const text = addressText.value;               
+
+                // By lines
+               var rows = text.split('\n');
+               var exclusdeRows= []
+               var includeRows= []
+               for (let row = 0; row < rows.length; row++) {
+                    if(rows[row]=="") {
+                        exclusdeRows.push(row);
+                        rows[row] = 'SPLITCOLUMN'
+                    } else {
+                        includeRows.push(rows[row]);
+                    }
+               }
+               let finalRows = rows.join('<br>')
+                var lines = finalRows.split('SPLITCOLUMN<br>')
+               // text.split(/(?:(?:\r\n|\r|\n)\s*){2}/gm);
+                 for (var line = 0; line < lines.length; line++) {
+                    console.log(lines[line]);
+                    if(lines[line] !=="") {
+                        let divEle = document.createElement('div')  
+                        divEle.classList.add(`address-list`)
+                        divEle.innerHTML = `${lines[line]}`
+                        $output.appendChild(divEle)
+                    }
+                }
+            //};
+           // reader.readAsText(file);
+           // };
+            }
+        </script>
+    </body>
+</html>
